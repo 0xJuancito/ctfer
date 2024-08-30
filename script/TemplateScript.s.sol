@@ -36,6 +36,6 @@ contract Pranker {
     }
 }
 
-// forge script ./script/CTFScript1.s.sol --tc CTFScript --skip-simulation --broadcast
+// forge script ./script/TemplateScript.s.sol --tc CTFScript --skip-simulation --broadcast
 
 // --priority-gas-price

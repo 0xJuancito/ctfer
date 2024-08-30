@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import {Script, console} from "forge-std/Script.sol";
+import {Test, console} from "forge-std/Test.sol";
 
-contract CTFScript is Script {
+contract CTFTest1 is Test {
     uint256 pk;
     address user;
     string rpc;
@@ -14,15 +14,17 @@ contract CTFScript is Script {
         rpc = vm.envString("RPC");
 
         vm.createSelectFork(rpc);
+
+        console.log("BLOCK", block.number);
+        console.log("TIME ", block.timestamp);
+        console.log();
     }
 
-    function run() public {
-        vm.startBroadcast(pk);
+    function testCTF0() public {
+        vm.startPrank(user);
 
-        // TODO
-        // Pranker p = new Pranker();
-
-        vm.stopBroadcast();
+        Pranker pranker = new Pranker();
+        pranker.prank();
     }
 }
 
@@ -35,7 +37,3 @@ contract Pranker {
         // 
     }
 }
-
-// forge script ./script/CTFScript1.s.sol --tc CTFScript --skip-simulation --broadcast
-
-// --priority-gas-price
