@@ -20,11 +20,37 @@ contract CTFTest3 is Test {
         console.log();
     }
 
-    function testCTF3() public {
+    /// forge-config: default.fuzz.runs = 100000000
+    function testCTF3(uint256 i) public {
+        i = uint256(bound(uint256(i), 0, type(uint256).max));
+        // vm.assume(i > 69);
+
         vm.startPrank(user);
 
-        Pranker pranker = new Pranker();
-        pranker.prank();
+        // Pranker pranker = new Pranker();
+        // pranker.prank();
+
+        Lock lock = Lock(0xa9b2D11c21834E195dA89BCc76c04AE24057e52E);
+
+        // lock.open(69);
+
+        // lock.brick();
+
+            try lock.open(i) {
+                // console.log(i);
+                revert();
+            } catch {
+                // console.log(i);
+            }
+
+        // for (uint256 i = 0; i < 100; i++) {
+        //     try lock.open(i) {
+        //         console.log(i);
+                
+        //     } catch {
+        //         // console.log(i);
+        //     }
+        // }
     }
 }
 
@@ -36,4 +62,9 @@ contract Pranker {
     function prank() external {
         // 
     }
+}
+
+interface Lock {
+    function open(uint256) external;
+    function brick() external;
 }

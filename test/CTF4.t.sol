@@ -23,8 +23,7 @@ contract CTFTest4 is Test {
     function testCTF4() public {
         vm.startPrank(user);
 
-        Pranker pranker = new Pranker();
-        pranker.prank();
+        Rand(0x67bc2abe147E7eac5B45d55491A7565673c02AE5).canYouUnlockMe(1, 1);
     }
 }
 
@@ -36,4 +35,8 @@ contract Pranker {
     function prank() external {
         // 
     }
+}
+
+interface Rand {
+    function canYouUnlockMe(uint256 _password, uint256 _seed) external;
 }

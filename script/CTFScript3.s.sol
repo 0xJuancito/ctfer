@@ -19,11 +19,15 @@ contract CTFScript is Script {
     function run() public {
         vm.startBroadcast(pk);
 
-        // TODO
-        // Pranker p = new Pranker();
+        Lock lock = Lock(0xa9b2D11c21834E195dA89BCc76c04AE24057e52E);
+        lock.open(69);
 
         vm.stopBroadcast();
     }
+}
+
+interface Lock {
+    function open(uint256) external;
 }
 
 contract Pranker {
